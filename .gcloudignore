@@ -1,0 +1,13 @@
+# Ignore local environment and dev-only files not needed in cloud
+.env
+backend/.env
+frontend/.env
+.vscode/
+.idea/
+tests/
+docs/
+
+# Ignore large files/data not needed in deployment
+path/to/large/local/datasets/
+
+node_modules

@@ -1,0 +1,26 @@
+# Node and Python dependencies
+node_modules/
+__pycache__/
+
+# Build artifacts
+build/
+dist/
+
+# Environment files
+.env
+backend/.env
+frontend/.env
+
+# Editor/IDE settings
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+
+#ignoring secret file ti be commited
+secrets/
+
+vevn/

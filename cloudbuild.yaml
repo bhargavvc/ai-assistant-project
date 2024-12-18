@@ -1,0 +1,102 @@
+serviceAccount: ${SERVICE_ACCOUNT}
+
+options:
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
+
+steps:
+  # ---------------- BACKEND BUILD AND PUSH ----------------
+
+  # Attempt to pull the previously built backend image for caching
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: 
+      [
+        '-c',
+        'docker pull ${ARTIFACT_BACKEND_IMAGE} || true'
+      ]
+
+  # Build the backend image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      [
+        'build',
+        '-t', '${ARTIFACT_BACKEND_IMAGE}',
+        '--cache-from', '${ARTIFACT_BACKEND_IMAGE}',
+        './backend'
+      ]
+
+  # Push the backend image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      [
+        'push',
+        '${ARTIFACT_BACKEND_IMAGE}'
+      ]
+
+  # Deploy the backend to Cloud Run and save the backend URL locally
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'deploy-backend'
+    entrypoint: 'bash'
+    args:
+      [
+        '-c',
+        "gcloud run deploy ${BACKEND_SERVICE_NAME} \
+        --image ${ARTIFACT_BACKEND_IMAGE} \
+        --platform managed \
+        --region ${REGION} \
+        --allow-unauthenticated \
+        --port ${BACKEND_PORT} && \
+        gcloud run services describe ${BACKEND_SERVICE_NAME} --platform managed --region ${REGION} \
+        --format 'value(status.url)' > backend_url.txt"
+      ]
+
+  # ---------------- FRONTEND BUILD AND PUSH ----------------
+
+  # Attempt to pull the previously built frontend image for caching
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: 
+      [
+        '-c',
+        'docker pull ${ARTIFACT_FRONTEND_IMAGE} || true'
+      ]
+
+  # Build the frontend image using the dynamically fetched backend URL
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: 
+      [
+        '-c',
+        "BACKEND_URL=$(cat backend_url.txt) && \
+        docker build --build-arg REACT_APP_BACKEND_URL=$BACKEND_URL \
+        -t ${ARTIFACT_FRONTEND_IMAGE} \
+        ./frontend_app"
+      ]
+
+  # Push the frontend image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      [
+        'push',
+        '${ARTIFACT_FRONTEND_IMAGE}'
+      ]
+
+  # ---------------- DEPLOY FRONTEND TO CLOUD RUN ----------------
+
+  # Deploy the frontend to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      [
+        '-c',
+        "gcloud run deploy ${FRONTEND_SERVICE_NAME} \
+        --image ${ARTIFACT_FRONTEND_IMAGE} \
+        --platform managed \
+        --region ${REGION} \
+        --allow-unauthenticated \
+        --port ${FRONTEND_PORT}"
+      ]
+
+images:
+  - '${ARTIFACT_BACKEND_IMAGE}'
+  - '${ARTIFACT_FRONTEND_IMAGE}'

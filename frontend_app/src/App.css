@@ -1,0 +1,107 @@
+body {
+  margin: 0;
+  background-color: #f5f5f5;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+.AppContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: 100vh;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.Header {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.Header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 2rem;
+}
+
+.Header p {
+  color: #555;
+}
+
+.ResultBox {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: left;
+  border: 1px solid #e2e2e2;
+  margin-top: 20px;
+}
+
+.ContentDisplay {
+  background: #fdfdfd;
+  padding: 15px;
+  border-radius: 5px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-top: 10px;
+}
+
+p {
+  margin: 10px 0;
+}
+
+textarea {
+  font-family: inherit;
+}
+
+/* Suggestion Box with Background Image */
+.suggestion-box {
+  position: relative; /* Allows layering */
+  background-image: url('/public/google-background.png'); /* Path to your image */
+  background-size: cover; /* Ensure the image fully covers the box */
+  background-position: center; /* Center the background image */
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  height: 250px; /* Adjust as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Add a semi-transparent overlay */
+.suggestion-overlay {
+  background-color: rgba(255, 255, 255, 0.7); /* 70% white transparency */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Keep it behind content */
+}
+
+/* Reduce the opacity of the background image itself */
+.suggestion-box::before {
+  content: '';
+  background-image: url('/public/google-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2; /* Reduce the image opacity */
+  z-index: 0; /* Push behind content */
+}
+
+/* Content on top of the image */
+.suggestion-content {
+  position: relative;
+  z-index: 1; /* Content sits above the image */
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  text-align: center;
+}

@@ -1,0 +1,56 @@
+# services:
+#   backend:
+#     build:
+#       context: ./backend
+#       dockerfile: Dockerfile #here i think we need to point to backednd docker file 
+#     ports:
+#       - "8080:8080"
+#     environment:
+#     - GOOGLE_APPLICATION_CREDENTIALS=/secrets/learning-assitant-95de2bef5b7b.json
+#     env_file:
+#       - .env
+#     volumes:
+#       - ./backend:/app
+#       - ./secrets/learning-assitant-95de2bef5b7b.json:/secrets/learning-assitant-95de2bef5b7b.json
+
+#   frontend_app:
+#     build:
+#       context: ./frontend_app
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - REACT_APP_BACKEND_URL=http://backend:8080
+#     env_file:
+#       - .env
+#     volumes:
+#       - ./frontend_app:/app
+#       - /app/node_modules
+#     stdin_open: true
+#     tty: true
+
+ 
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      - ./secrets:/app/secrets:ro  # Mount secrets for GCP
+    restart: always
+
+  frontend_app:
+    build:
+      context: .
+      dockerfile: frontend_app/Dockerfile
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+    restart: always

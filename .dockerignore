@@ -1,0 +1,45 @@
+**/.classpath
+**/.dockerignore
+**/.env
+**/.git
+**/.gitignore
+**/.project
+**/.settings
+**/.toolstarget
+**/.vs
+**/.vscode
+**/*.*proj.user
+**/*.dbmdl
+**/*.jfm
+**/bin
+**/charts
+**/docker-compose*
+**/compose*
+**/Dockerfile*
+**/node_modules
+**/npm-debug.log
+**/obj
+**/secrets.dev.yaml
+**/values.dev.yaml
+LICENSE
+README.md
+
+# Ignore source control and dev files
+.git
+.gitignore
+
+# Ignore node_modules if installing dependencies in Docker
+node_modules/
+
+# Ignore environment files with secrets
+.env
+backend/.env
+frontend/.env
+
+# Ignore build artifacts if they are rebuilt in Docker
+build/
+dist/
+
+# Ignore IDE settings
+.vscode/
+.idea/
