@@ -84,9 +84,6 @@
 - **Babel:** JavaScript compiler to convert modern JS into backward-compatible versions.
 
 ## Architecture Overview
-
-![Architecture Diagram](https://your-image-url.com/architecture-diagram.png)
-
 **High-Level Architecture:**
 
 1. **Frontend (React):**
